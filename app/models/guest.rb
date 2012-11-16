@@ -5,8 +5,6 @@ class Guest < ActiveRecord::Base
   has_many :invitations, as: :invitee
   has_many :votes, as: :voter
 
-  strip_attributes only: [:email]
-
   validates :email, presence: true, uniqueness: true
   validates :email, email: true
   validates :name, presence: true, if: :should_validate_name
