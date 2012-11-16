@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   has_many :votes, as: :voter
   has_many :invitations, as: :invitee
 
+  before_validation :strip_whitespace, only: [:email]
+
   validates :email, email: true
   validates :encrypted_access_token, presence: true
   validates :name, presence: true
@@ -122,5 +124,11 @@ class User < ActiveRecord::Base
   def parse_email_from_response(response)
     response['contact']['email_addresses'].
       detect{ |address| address['type'] == 'primary' }['address']
+  end
+
+  def strip_whitespace
+    if self.email
+      self.email = email.strip
+    end
   end
 end
