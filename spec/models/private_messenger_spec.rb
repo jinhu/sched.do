@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PrivateMessenger, '#invitation' do
+describe UserPrivateMessenger, '#invitation' do
   it 'sends the correct invitation' do
     event_owner = create(:user)
     invitee = create(:user)
@@ -8,7 +8,7 @@ describe PrivateMessenger, '#invitation' do
     event = create(:event, owner: event_owner)
     invitation = build(:invitation, event: event, invitee: invitee)
 
-    PrivateMessenger.new(
+    UserPrivateMessenger.new(
       recipient: invitee,
       message: message,
       sender: event_owner,
@@ -21,7 +21,7 @@ describe PrivateMessenger, '#invitation' do
   end
 end
 
-describe PrivateMessenger, '#reminder' do
+describe UserPrivateMessenger, '#reminder' do
   it 'sends the correct reminder' do
     event_owner = create(:user)
     invitee = create(:user)
@@ -29,7 +29,7 @@ describe PrivateMessenger, '#reminder' do
     event = create(:event, owner: event_owner)
     invitation = build(:invitation, event: event, invitee: invitee)
 
-    PrivateMessenger.new(
+    UserPrivateMessenger.new(
       recipient: invitee,
       message: message,
       sender: event_owner,
@@ -42,15 +42,15 @@ describe PrivateMessenger, '#reminder' do
   end
 end
 
-describe PrivateMessenger, '#group_invitation' do
+describe GroupPrivateMessenger, '#group_invitation' do
   it 'sends a group invitation' do
     event_owner = create(:user)
     group = create(:group)
-    message = :group_invitation
+    message = :invitation
     event = create(:event, owner: event_owner)
     invitation = build(:invitation, event: event, invitee: group)
 
-    PrivateMessenger.new(
+    GroupPrivateMessenger.new(
       recipient: group,
       message: message,
       sender: event_owner,
@@ -63,15 +63,15 @@ describe PrivateMessenger, '#group_invitation' do
   end
 end
 
-describe PrivateMessenger, '#group_reminder' do
+describe GroupPrivateMessenger, '#group_reminder' do
   it 'sends a group reminder' do
     event_owner = create(:user)
     group = create(:group)
-    message = :group_reminder
+    message = :reminder
     event = create(:event, owner: event_owner)
     invitation = build(:invitation, event: event, invitee: group)
 
-    PrivateMessenger.new(
+    GroupPrivateMessenger.new(
       recipient: group,
       message: message,
       sender: event_owner,
