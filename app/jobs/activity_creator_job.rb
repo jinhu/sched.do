@@ -39,7 +39,7 @@ class ActivityCreatorJob < Struct.new(:user_id, :action, :event_id)
   end
 
   def user
-    User.find(user_id)
+    @user ||= User.find(user_id)
   end
 
   def post_yammer_activity
@@ -67,7 +67,7 @@ class ActivityCreatorJob < Struct.new(:user_id, :action, :event_id)
   end
 
   def event
-    Event.find(event_id)
+    @event ||= Event.find(event_id)
   end
 
   def log_error

@@ -31,20 +31,20 @@ class VoteCreatedJob < Struct.new(:vote_id)
   end
 
   def voter
-    vote.voter
+    @voter ||= vote.voter
   end
 
   def vote
-    Vote.find(vote_id)
-  end
-
-  def event
-    vote.event
+    @vote ||= Vote.find(vote_id)
   end
 
   def enqueue_activity_creator_job
     if voter.yammer_user?
       ActivityCreatorJob.enqueue(voter, ACTION, event)
     end
+  end
+
+  def event
+    vote.event
   end
 end
