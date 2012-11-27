@@ -254,17 +254,17 @@ describe Event, '#deliver_reminder_from' do
 
     event.deliver_reminder_from(sender)
 
-    guest.should have_received(:deliver_email_or_private_message).once
-    user.should have_received(:deliver_email_or_private_message).once
-    sender.should have_received(:deliver_email_or_private_message).never
+    guest.should have_received(:remind).once
+    user.should have_received(:remind).once
+    sender.should have_received(:remind).never
   end
 end
 
 def create_event_with_invitees(guest, user)
   event = create(:event)
 
-  guest.stubs(:deliver_email_or_private_message)
-  user.stubs(:deliver_email_or_private_message)
+  guest.stubs(:remind)
+  user.stubs(:remind)
 
   event.users << user
   event.guests << guest

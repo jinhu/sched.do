@@ -240,7 +240,7 @@ describe User, '#create_yammer_activity' do
   end
 end
 
-describe User, '#deliver_email_or_private_message' do
+describe User, '#invite' do
   include DelayedJobSpecHelper
 
   it 'if the user is out-network, it sends an email notification' do
@@ -251,8 +251,7 @@ describe User, '#deliver_email_or_private_message' do
     organizer = invitation.sender
     event = invitation.event
 
-    invitee.deliver_email_or_private_message(
-      :invitation,
+    invitee.invite(
       event.owner,
       invitation
     )
@@ -269,13 +268,17 @@ describe User, '#deliver_email_or_private_message' do
     organizer = invitation.sender
     owner = invitation.event.owner
 
-    invitee.deliver_email_or_private_message(:reminder, owner, invitation)
+    invitee.remind(owner, invitation)
     work_off_delayed_jobs
 
     organizer.should be_in_network(invitee)
     FakeYammer.messages_endpoint_hits.should == 1
     FakeYammer.message.should include(invitation.event.name)
   end
+end
+
+describe User, '#remind' do
+  include DelayedJobSpecHelper
 
   it 'hits the Yammer messages API, if the user is in-network' do
     invitee = build_stubbed(:user)
@@ -283,8 +286,7 @@ describe User, '#deliver_email_or_private_message' do
                                invitee: invitee)
 
     expect {
-      invitee.deliver_email_or_private_message(
-        :reminder,
+      invitee.remind(
         invitation.event.owner,
         invitation
       )

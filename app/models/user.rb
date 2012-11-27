@@ -60,16 +60,27 @@ class User < ActiveRecord::Base
     self[:image] || 'http://' + ENV['HOSTNAME'] + '/assets/no_photo.png'
   end
 
-  def deliver_email_or_private_message(message, sender, object)
+  def invite(sender, object)
     if in_network?(sender)
       UserPrivateMessenger.new(
         recipient: self,
-        message: message,
         sender: sender,
         message_object: object
-      ).deliver
+      ).invitation.deliver
     else
-      UserMailer.send(message, sender, object).deliver
+      UserMailer.invitation(sender, object).deliver
+    end
+  end
+
+  def remind(sender, object)
+    if in_network?(sender)
+      UserPrivateMessenger.new(
+        recipient: self,
+        sender: sender,
+        message_object: object
+      ).reminder.deliver
+    else
+      UserMailer.reminder(sender, object).deliver
     end
   end
 

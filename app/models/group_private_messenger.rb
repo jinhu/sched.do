@@ -3,22 +3,24 @@ class GroupPrivateMessenger
 
   def initialize(params)
     @recipient = params[:recipient]
-    @message = params[:message]
     @sender = params[:sender]
     @message_object = params[:message_object]
-    send(@message)
   end
 
   def invitation
-    @invitation = @message_object
-    @event = @invitation.event
-    @message_body = group_invitation_message_body
+    tap do
+      @invitation = @message_object
+      @event = @invitation.event
+      @message_body = group_invitation_message_body
+    end
   end
 
   def reminder
-    @invitation = @message_object
-    @event = @invitation.event
-    @message_body = reminder_message_body
+    tap do
+      @invitation = @message_object
+      @event = @invitation.event
+      @message_body = reminder_message_body
+    end
   end
 
   def deliver

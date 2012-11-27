@@ -43,8 +43,12 @@ class Guest < ActiveRecord::Base
     'http://' + ENV['HOSTNAME'] + '/assets/no_photo.png'
   end
 
-  def deliver_email_or_private_message(message, sender, object)
-    UserMailer.send(message, sender, object).deliver
+  def invite(sender, object)
+    UserMailer.invitation(sender, object).deliver
+  end
+
+  def remind(sender, object)
+    UserMailer.reminder(sender, object).deliver
   end
 
   def set_should_validate_name
